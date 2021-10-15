@@ -17,6 +17,7 @@ set(ROCKIT_DEP_COMMON_LIBS
 )
 set(ROCKIT_FILE_LIBS
     ${ROCKIT_DEP_COMMON_LIBS}
+    ${CMAKE_CURRENT_LIST_DIR}/sdk/lib/libgraphic_lsf.so
 )
 set(ROCKIT_DUMPSYS_FILE ${CMAKE_CURRENT_LIST_DIR}/example/bin/bin32/dumpsys)
 endif()
