@@ -27,7 +27,8 @@
 #include "rk_mpi_ao.h"
 #include "rk_mpi_mb.h"
 #include "rk_mpi_sys.h"
-#include "argparse.h"
+
+#include "test_comm_argparse.h"
 
 typedef struct _rkMpiAOCtx {
     const char *srcFilePath;

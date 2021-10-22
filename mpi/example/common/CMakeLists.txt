@@ -1,13 +1,20 @@
 cmake_minimum_required( VERSION 2.8.8 )
-add_definitions(-fno-rtti)
 
-add_compile_options(-std=c++11)
-add_definitions(-std=c++11 -Wno-attributes -Wno-deprecated-declarations -DANDROID_STL=c++_shared)
-
-set(RK_MPI_TEST_COMMON_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/argparse.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mpi_test_utils.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/loadbmp.cpp
-    PARENT_SCOPE
+set(RK_TEST_MOD_SRC
+    test_mod_vpss.cpp
 )
 
+set(RK_TEST_COMMON_SRC
+    test_comm_argparse.cpp
+    test_comm_utils.cpp
+    test_comm_bmp.cpp
+    test_comm_imgproc.cpp
+    test_comm_sys.cpp
+    test_comm_rgn.cpp
+    test_comm_venc.cpp
+    test_comm_vpss.cpp
+)
+
+add_library(${RT_TEST_COMM_STATIC} STATIC ${RK_TEST_COMMON_SRC} ${RK_TEST_MOD_SRC})
+set_target_properties(${RT_TEST_COMM_STATIC} PROPERTIES FOLDER "rt_test_comm")
+target_link_libraries(${RT_TEST_COMM_STATIC})

@@ -28,8 +28,8 @@
 #include "rk_mpi_mb.h"
 #include "rk_mpi_sys.h"
 #include "rk_mpi_cal.h"
-#include "mpi_test_utils.h"
-#include "argparse.h"
+
+#include "test_comm_argparse.h"
 
 typedef enum rkVGS_TASK_TYPE_E {
     VGS_TASK_TYPE_NONE = 0,
@@ -82,7 +82,7 @@ typedef struct _rkMpiVgsCtx {
 
 typedef struct _rkMpiTestTaskCtx {
     VGS_ADD_COVER_S enCoverInfo[VGS_MAX_TASK_NUM];
-    VGS_ADD_OSD_S   enOsdInfo[VGS_MAX_TASK_NUM * VGS_MAX_ARRAY_SIZE];
+    VGS_ADD_OSD_S   enOsdInfo[VGS_MAX_TASK_NUM * 8];
     VGS_MOSAIC_S    enMosaicInfo[VGS_MAX_TASK_NUM];
     VGS_DRAW_LINE_S enDrawLine[VGS_MAX_TASK_NUM];
     VGS_CROP_INFO_S stCropInfo;
@@ -116,6 +116,7 @@ RK_S32 unit_test_vgs_generate_source(const char *srcFilePath, MB_BLK *pstSrcBlk,
     if (s32Ret == RK_SUCCESS) {
        pSrcData = RK_MPI_MB_Handle2VirAddr(*pstSrcBlk);
        s32Ret = test_open_and_read_file(srcFilePath, pSrcData, u32SrcSize);
+       RK_MPI_SYS_MmzFlushCache(*pstSrcBlk, RK_FALSE);
     }
     return s32Ret;
 }
@@ -555,6 +556,7 @@ RK_S32 unit_test_vgs_output_one_task(
     if (file) {
         if (pstFrame) {
             RK_LOGD("get frame data = %p, size = %d, bBlk:%p ", pstFrame, u32OutputSize, bBlk);
+            RK_MPI_SYS_MmzFlushCache(bBlk, RK_TRUE);
             fwrite(pstFrame, 1, u32OutputSize, file);
             fflush(file);
         }

@@ -8,6 +8,10 @@ set(RK_MPI_TEST_AO_SRC
     test_mpi_ao.cpp
 )
 
+set(RK_MPI_TEST_ADEC_SRC
+    test_mpi_adec.cpp
+)
+
 set(RK_MPI_TEST_VPSS_SRC
     test_mpi_vpss.cpp
 )
@@ -22,6 +26,10 @@ set(RK_MPI_TEST_MB_SRC
 
 set(RK_MPI_TEST_SYS_SRC
     test_mpi_sys.cpp
+)
+
+set(RK_MPI_TEST_VDEC_SRC
+    test_mpi_vdec.cpp
 )
 
 set(RK_MPI_TEST_VENC_SRC
@@ -40,6 +48,10 @@ set(RK_MPI_TEST_RGN_SRC
     test_mpi_rgn.cpp
 )
 
+set(RK_MPI_TEST_VO_SRC
+    test_mpi_vo.cpp
+)
+
 set(RK_MPI_TEST_AENC_SRC
     test_mpi_aenc.cpp
 )
@@ -51,6 +63,15 @@ set(RK_MPI_TEST_VI_SRC
 set(RK_MPI_TEST_MMZ_SRC
     test_mpi_mmz.cpp
 )
+
+set(RK_MPI_TEST_AVS_SRC
+    test_mpi_avs.cpp
+)
+
+set(RK_MPI_TEST_AVIO_SRC
+    sys/test_sys_avio.cpp
+)
+
 #--------------------------
 # rk_mpi_ao_test
 #--------------------------
@@ -58,6 +79,12 @@ add_executable(rk_mpi_ao_test ${RK_MPI_TEST_AO_SRC} ${RK_MPI_TEST_COMMON_SRC})
 target_link_libraries(rk_mpi_ao_test ${ROCKIT_DEP_COMMON_LIBS})
 install(TARGETS rk_mpi_ao_test RUNTIME DESTINATION "bin")
 
+#--------------------------
+# rk_mpi_adec_test
+#--------------------------
+add_executable(rk_mpi_adec_test ${RK_MPI_TEST_ADEC_SRC} ${RK_MPI_TEST_COMMON_SRC})
+target_link_libraries(rk_mpi_adec_test ${ROCKIT_DEP_COMMON_LIBS})
+install(TARGETS rk_mpi_adec_test RUNTIME DESTINATION "bin")
 
 #--------------------------
 # rk_mpi_vpss_test
@@ -88,6 +115,13 @@ target_link_libraries(rk_mpi_sys_test ${ROCKIT_DEP_COMMON_LIBS})
 install(TARGETS rk_mpi_sys_test RUNTIME DESTINATION "bin")
 
 #--------------------------
+# rk_mpi_vdec_test
+#--------------------------
+add_executable(rk_mpi_vdec_test ${RK_MPI_TEST_VDEC_SRC} ${RK_MPI_TEST_COMMON_SRC})
+target_link_libraries(rk_mpi_vdec_test ${ROCKIT_DEP_COMMON_LIBS})
+install(TARGETS rk_mpi_vdec_test RUNTIME DESTINATION "bin")
+
+#--------------------------
 # rk_mpi_venc_test
 #--------------------------
 add_executable(rk_mpi_venc_test ${RK_MPI_TEST_VENC_SRC} ${RK_MPI_TEST_COMMON_SRC})
@@ -114,6 +148,13 @@ add_executable(rk_mpi_rgn_test ${RK_MPI_TEST_RGN_SRC} ${RK_MPI_TEST_COMMON_SRC})
 target_link_libraries(rk_mpi_rgn_test ${ROCKIT_DEP_COMMON_LIBS})
 install(TARGETS rk_mpi_rgn_test RUNTIME DESTINATION "bin")
 
+#--------------------------
+# rk_mpi_vo_test
+#--------------------------
+add_executable(rk_mpi_vo_test ${RK_MPI_TEST_VO_SRC} ${RK_MPI_TEST_COMMON_SRC})
+target_link_libraries(rk_mpi_vo_test ${ROCKIT_DEP_COMMON_LIBS})
+install(TARGETS rk_mpi_vo_test RUNTIME DESTINATION "bin")
+
 # rk_mpi_aenc_test
 #--------------------------
 add_executable(rk_mpi_aenc_test ${RK_MPI_TEST_AENC_SRC} ${RK_MPI_TEST_COMMON_SRC})
@@ -133,3 +174,17 @@ install(TARGETS rk_mpi_vi_test RUNTIME DESTINATION "bin")
 add_executable(rk_mpi_mmz_test ${RK_MPI_TEST_MMZ_SRC} ${RK_MPI_TEST_COMMON_SRC})
 target_link_libraries(rk_mpi_mmz_test ${ROCKIT_DEP_COMMON_LIBS})
 install(TARGETS rk_mpi_mmz_test RUNTIME DESTINATION "bin")
+
+#--------------------------
+# rk_mpi_mmz_test
+#--------------------------
+add_executable(rk_mpi_avs_test ${RK_MPI_TEST_AVS_SRC} ${RK_MPI_TEST_COMMON_SRC})
+target_link_libraries(rk_mpi_avs_test ${ROCKIT_DEP_COMMON_LIBS})
+install(TARGETS rk_mpi_avs_test RUNTIME DESTINATION "bin")
+
+#--------------------------
+# rk_mpi_avio_test
+#--------------------------
+add_executable(rk_mpi_avio_test ${RK_MPI_TEST_AVIO_SRC} ${RK_MPI_TEST_COMMON_SRC})
+target_link_libraries(rk_mpi_avio_test ${ROCKIT_DEP_COMMON_LIBS})
+install(TARGETS rk_mpi_avio_test RUNTIME DESTINATION "bin")

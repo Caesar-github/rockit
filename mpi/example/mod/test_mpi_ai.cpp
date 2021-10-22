@@ -21,14 +21,17 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <pthread.h>
+#include <sys/poll.h>
 #include "rk_defines.h"
 #include "rk_debug.h"
 #include "rk_mpi_ai.h"
 #include "rk_mpi_sys.h"
-#include "argparse.h"
 #include "rk_mpi_mb.h"
 
+#include "test_comm_argparse.h"
+
 static RK_BOOL gAiExit = RK_FALSE;
+#define TEST_AI_WITH_FD 0
 
 typedef struct _rkMpiAICtx {
     const char *srcFilePath;
@@ -45,6 +48,7 @@ typedef struct _rkMpiAICtx {
     RK_S32      s32PeriodSize;
     char       *chCardName;
     RK_S32      s32ChnIndex;
+    RK_S32      s32DevFd;
 } TEST_AI_CTX_S;
 
 static AUDIO_SOUND_MODE_E ai_find_sound_mode(RK_S32 ch) {
@@ -82,6 +86,26 @@ static AUDIO_BIT_WIDTH_E ai_find_bit_width(RK_S32 bit) {
     }
 
     return bitWidth;
+}
+
+RK_S32 test_ai_poll_event(RK_S32 timeoutMsec, RK_S32 fd) {
+    RK_S32 num_fds = 1;
+    struct pollfd pollFds[num_fds];
+    RK_S32 ret = 0;
+
+    RK_ASSERT(fd > 0);
+    memset(pollFds, 0, sizeof(pollFds));
+    pollFds[0].fd = fd;
+    pollFds[0].events = (POLLPRI | POLLIN | POLLERR | POLLNVAL | POLLHUP);
+
+    ret = poll(pollFds, num_fds, timeoutMsec);
+
+    if (ret > 0 && (pollFds[0].revents & (POLLERR | POLLNVAL | POLLHUP))) {
+        RK_LOGE("fd:%d polled error", fd);
+        return -1;
+    }
+
+    return ret;
 }
 
 RK_S32 test_open_device_ai(TEST_AI_CTX_S *ctx) {
@@ -144,6 +168,12 @@ RK_S32 test_init_mpi_ai(TEST_AI_CTX_S *params) {
         return RK_FAILURE;
     }
 
+#if TEST_AI_WITH_FD
+    // open fd immediate after enable chn will be better.
+    params->s32DevFd = RK_MPI_AI_GetFd(params->s32DevId, params->s32ChnIndex);
+    RK_LOGI("ai (devId: %d, chnId: %d), selectFd:%d", params->s32DevId, params->s32ChnIndex, params->s32DevFd);
+#endif
+
     result = RK_MPI_AI_EnableReSmp(params->s32DevId, params->s32ChnIndex,
                                   (AUDIO_SAMPLE_RATE_E)params->s32SampleRate);
     if (result != 0) {
@@ -188,6 +218,9 @@ void* sendDataThread(void * ptr) {
     }
 
     while (!gAiExit) {
+#if TEST_AI_WITH_FD
+        test_ai_poll_event(-1, params->s32DevFd);
+#endif
         result = RK_MPI_AI_GetFrame(params->s32DevId, params->s32ChnIndex, &frame, RK_NULL, s32MilliSec);
         if (result == 0) {
             void* data = RK_MPI_MB_Handle2VirAddr(frame.pMbBlk);
@@ -213,6 +246,7 @@ RK_S32 unit_test_mpi_ai(TEST_AI_CTX_S *ctx) {
     for (i = 0; i < ctx->s32ChnNum; i++) {
         memcpy(&(params[i]), ctx, sizeof(TEST_AI_CTX_S));
         params[i].s32ChnIndex = i;
+        params[i].s32DevFd = -1;
 
         test_init_mpi_ai(&params[i]);
         pthread_create(&tidSend[i], RK_NULL, sendDataThread, reinterpret_cast<void *>(&params[i]));

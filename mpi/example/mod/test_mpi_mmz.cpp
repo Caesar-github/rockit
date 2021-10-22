@@ -23,7 +23,8 @@
 #include "rk_debug.h"
 #include "rk_comm_mb.h"
 #include "rk_mpi_mmz.h"
-#include "argparse.h"
+
+#include "test_comm_argparse.h"
 
 #define MB_POOL_COUNT           10
 #define MB_POOL_MB_COUNT        10

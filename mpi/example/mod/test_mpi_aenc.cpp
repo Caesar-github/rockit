@@ -20,11 +20,14 @@
 #include <cstdlib>
 #include <unistd.h>
 #include <pthread.h>
+#include <sys/poll.h>
 #include "rk_debug.h"
 #include "rk_mpi_aenc.h"
 #include "rk_mpi_mb.h"
 #include "rk_mpi_sys.h"
-#include "argparse.h"
+
+#include "test_comm_argparse.h"
+#define TEST_AENC_WITH_FD 0
 
 typedef struct _rkTEST_AENC_CTX_S {
     const char *srcFilePath;
@@ -38,6 +41,7 @@ typedef struct _rkTEST_AENC_CTX_S {
     RK_S32      s32MilliSec;
     RK_S32      s32ChnIndex;
     RK_S32      s32FrameSize;
+    RK_S32      s32DevFd;
 } TEST_AENC_CTX_S;
 
 static RK_S32 aenc_data_free(void *opaque) {
@@ -54,8 +58,10 @@ static RK_U32 test_find_audio_enc_codec_id(TEST_AENC_CTX_S *params) {
         return -1;
 
     char *format = params->chCodecId;
-    if (strstr(format, "mp2")) {
+   if (strstr(format, "mp2")) {
         return RK_AUDIO_ID_MP2;
+    } else if (strstr(format, "g722")) {
+        return RK_AUDIO_ID_ADPCM_G722;
     } else if (strstr(format, "g726")) {
         return RK_AUDIO_ID_ADPCM_G726;
     } else if (strstr(format, "g711a")) {
@@ -63,6 +69,7 @@ static RK_U32 test_find_audio_enc_codec_id(TEST_AENC_CTX_S *params) {
     } else if (strstr(format, "g711u")) {
         return RK_AUDIO_ID_PCM_MULAW;
     }
+
     RK_LOGE("test not find codec id : %s", params->chCodecId);
     return -1;
 }
@@ -83,6 +90,26 @@ static RK_U32 test_find_audio_enc_format(TEST_AENC_CTX_S *params) {
     return -1;
 }
 
+RK_S32 test_aenc_poll_event(RK_S32 timeoutMsec, RK_S32 fd) {
+    RK_S32 num_fds = 1;
+    struct pollfd pollFds[num_fds];
+    RK_S32 ret = 0;
+
+    RK_ASSERT(fd > 0);
+    memset(pollFds, 0, sizeof(pollFds));
+    pollFds[0].fd = fd;
+    pollFds[0].events = (POLLPRI | POLLIN | POLLERR | POLLNVAL | POLLHUP);
+
+    ret = poll(pollFds, num_fds, timeoutMsec);
+
+    if (ret > 0 && (pollFds[0].revents & (POLLERR | POLLNVAL | POLLHUP))) {
+        RK_LOGE("fd:%d polled error", fd);
+        return -1;
+    }
+
+    return ret;
+}
+
 RK_S32 test_init_mpi_aenc(TEST_AENC_CTX_S *params) {
     RK_S32 s32ret = 0;
     AENC_CHN_ATTR_S stAencAttr;
@@ -101,7 +128,6 @@ RK_S32 test_init_mpi_aenc(TEST_AENC_CTX_S *params) {
     stAencAttr.enType = (RK_CODEC_ID_E)codecId;
     stAencAttr.stAencCodec.u32Channels = params->s32Channel;
     stAencAttr.stAencCodec.u32SampleRate = params->s32SampleRate;
-
     stAencAttr.stAencCodec.enBitwidth = (AUDIO_BIT_WIDTH_E)format;
     stAencAttr.u32BufCount = 4;
     stAencAttr.extraDataSize = 0;
@@ -112,6 +138,12 @@ RK_S32 test_init_mpi_aenc(TEST_AENC_CTX_S *params) {
         RK_LOGE("create aenc chn %d err:0x%x\n", AdChn, s32ret);
         return RK_FAILURE;
     }
+
+#if TEST_AENC_WITH_FD
+    // open fd immediate after enable chn will be better.
+    params->s32DevFd = RK_MPI_AENC_GetFd(AdChn);
+    RK_LOGI("ai chnId: %d, selectFd:%d", (RK_S32)AdChn, params->s32DevFd);
+#endif
 
     return RK_SUCCESS;
 }
@@ -196,6 +228,9 @@ static void *receive_stream_thread(void *arg) {
     }
 
     while (1) {
+#if TEST_AENC_WITH_FD
+        test_aenc_poll_event(-1, params->s32DevFd);
+#endif
         s32ret = RK_MPI_AENC_GetStream(AdChn, &pstStream, params->s32MilliSec);
         if (s32ret == RK_SUCCESS) {
             MB_BLK bBlk = pstStream.pMbBlk;
@@ -304,7 +339,7 @@ int main(int argc, const char **argv) {
         OPT_STRING('i', "input",  &(ctx->srcFilePath),
                    "input file name , e.g.(./*.mp3). <required>", NULL, 0, 0),
         OPT_STRING('C', "codec", &(ctx->chCodecId),
-                    "codec, e.g.(mp2/g711a/g711u/g726). <required>", NULL, 0, 0),
+                    "codec, e.g.(mp3/aac/flac/mp2/g722/g726). <required>", NULL, 0, 0),
         OPT_INTEGER('\0', "input_ch", &(ctx->s32Channel),
                     "the number of input stream channels. <required>", NULL, 0, 0),
         OPT_INTEGER('\0', "input_rate", &(ctx->s32SampleRate),

@@ -23,7 +23,9 @@
 
 #include "rk_debug.h"
 #include "rk_mpi_mb.h"
-#include "argparse.h"
+#include "rk_mpi_sys.h"
+
+#include "test_comm_argparse.h"
 
 #define MB_POOL_COUNT           10
 #define MB_POOL_MB_COUNT        10
@@ -46,6 +48,8 @@ RK_S32 unit_test_mpi_mb(const TEST_MB_CTX_S *pstCtx) {
     std::vector<MB_BLK>::iterator iter;
     RK_S32 s32Ret = RK_SUCCESS;
     RK_S32 loopCount = pstCtx->s32LoopCount;
+    RK_S32 s32UniqueId = -1;
+    RK_S32 s32DupFd = -1;
 
     memset(&pstMbPoolCfg, 0, sizeof(MB_POOL_CONFIG_S));
     pstMbPoolCfg.u64MBSize   = pstCtx->s32MbSize;
@@ -111,9 +115,22 @@ RK_S32 unit_test_mpi_mb(const TEST_MB_CTX_S *pstCtx) {
                         RK_MPI_MB_ReleaseMB(mb);
                         goto __FAILED;
                     }
+                    s32UniqueId = RK_MPI_MB_Handle2UniqueId(mb);
+                    if (s32UniqueId < 0) {
+                        s32Ret = RK_ERR_MB_BUSY;
+                        RK_MPI_MB_ReleaseMB(mb);
+                        goto __FAILED;
+                    }
+                    s32DupFd = RK_MPI_MB_UniqueId2Fd(s32UniqueId);
                 }
-                RK_LOGI("get pool id %d from mb %p refsCount %d. phy addr %p, vir addr %p, fd %d",
-                         poolId, mb, refsCount, phyAddr, virAddr, fd);
+
+                RK_LOGI("get poolId(%d) from mb(%p) refsCount(%d) phyAddr(%p) virAddr(%p) "
+                         "fd(%d) uniqueId(%d) dupFd(%d)",
+                         poolId, mb, refsCount, phyAddr, virAddr, fd, s32UniqueId, s32DupFd);
+                if (s32DupFd >= 0) {
+                    close(s32DupFd);
+                    s32DupFd = -1;
+                }
                 vector.emplace_back(mb);
             }
             iter = vector.begin();

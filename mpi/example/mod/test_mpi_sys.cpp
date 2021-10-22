@@ -24,7 +24,8 @@
 #include "rk_mpi_sys.h"
 #include "rk_mpi_ao.h"
 #include "rk_mpi_adec.h"
-#include "argparse.h"
+
+#include "test_comm_argparse.h"
 
 typedef struct _rkTestSysCtx {
     RK_S32      s32LoopCount;

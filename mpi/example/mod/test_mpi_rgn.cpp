@@ -31,11 +31,59 @@
 #include "rk_mpi_mb.h"
 #include "rk_mpi_cal.h"
 
-#include "loadbmp.h"
-#include "argparse.h"
-#include "mpi_test_utils.h"
+#include "test_comm_bmp.h"
+#include "test_comm_argparse.h"
+#include "test_comm_utils.h"
 
 #define MAX_TIME_OUT_MS              20
+
+/* PixFormat: big-edian:BGRA8888 => A:bit31~bit24 R:bit23~bit16 G:bit15~bit8 B:bit7~bit0 */
+const RK_U32 u32BGRA8888ColorTblUser[RGN_CLUT_NUM] = {
+    // transparency/gray/red/earthy yellow /blue
+    0x00ffffff, 0xff5e6060, 0xffe9491e, 0xfff4bc1f, 0xff1ca2dd, 0xff87bd43,
+    0xffff1f1f, 0xff0000af, 0xff0000d7, 0xff0000ff, 0xff005f00, 0xff005f5f,
+    0xff005f87, 0xff005faf, 0xff005fd7, 0xff005fff, 0xff008000, 0xff008080,
+    0xff008700, 0xff00875f, 0xff008787, 0xff0087af, 0xff0087d7, 0xff0087ff,
+    0xff00af00, 0xff00af5f, 0xff00af87, 0xff00afaf, 0xff00afd7, 0xff00afff,
+    0xff00d700, 0xff00d75f, 0xff00d787, 0xff00d7af, 0xff00d7d7, 0xff00d7ff,
+    0xff00ff00, 0xff00ff28, 0xff00ff5f, 0xff00ff87, 0xff00ffaf, 0xff00ffd7,
+    0xff00ffff, 0xff00ffff, 0xff080808, 0xff121212, 0xff1c1c1c, 0xff262626,
+    0xff303030, 0xff3a3a3a, 0xff444444, 0xff4e4e4e, 0xff585858, 0xff5f0000,
+    0xff5f005f, 0xff5f0087, 0xff5f00af, 0xff5f00d7, 0xff5f00ff, 0xff5f5f00,
+    0xff5f5f5f, 0xff5f5f87, 0xff5f5faf, 0xff5f5fd7, 0xff5f5fff, 0xff5f8700,
+    0xff5f875f, 0xff5f8787, 0xff5f87af, 0xff5f87d7, 0xff5f87ff, 0xff5faf00,
+    0xff5faf5f, 0xff5faf87, 0xff5fafaf, 0xff5fafd7, 0xff5fafff, 0xff5fd700,
+    0xff5fd75f, 0xff5fd787, 0xff5fd7af, 0xff5fd7d7, 0xff5fd7ff, 0xff5fff00,
+    0xff5fff5f, 0xff5fff87, 0xff5fffaf, 0xff5fffd7, 0xff5fffff, 0xff626262,
+    0xff6c6c6c, 0xff767676, 0xff800000, 0xff800080, 0xff808000, 0xff808080,
+    0xff808080, 0xff870000, 0xff87005f, 0xff870087, 0xff8700af, 0xff8700d7,
+    0xff8700ff, 0xff875f00, 0xff875f5f, 0xff875f87, 0xff875faf, 0xff875fd7,
+    0xff875fff, 0xff878700, 0xff87875f, 0xff878787, 0xff8787af, 0xff8787d7,
+    0xff8787ff, 0xff87af00, 0xff87af5f, 0xff87af87, 0xff87afaf, 0xff87afd7,
+    0xff87afff, 0xff87d700, 0xff87d75f, 0xff87d787, 0xff87d7af, 0xff87d7d7,
+    0xff87d7ff, 0xff87ff00, 0xff87ff5f, 0xff87ff87, 0xff87ffaf, 0xff87ffd7,
+    0xff87ffff, 0xff8a8a8a, 0xff949494, 0xff9e9e9e, 0xffa8a8a8, 0xffaf0000,
+    0xffaf005f, 0xffaf0087, 0xffaf00af, 0xffaf00d7, 0xffaf00ff, 0xffaf5f00,
+    0xffaf5f5f, 0xffaf5f87, 0xffaf5faf, 0xffaf5fd7, 0xffaf5fff, 0xffaf8700,
+    0xffaf875f, 0xffaf8787, 0xffaf87af, 0xffaf87d7, 0xffaf87ff, 0xffafaf00,
+    0xffafaf5f, 0xffafaf87, 0xffafafaf, 0xffafafd7, 0xffafafff, 0xffafd700,
+    0xffafd75f, 0xffafd787, 0xffafd7af, 0xffafd7d7, 0xffafd7ff, 0xffafff00,
+    0xffafff5f, 0xffafff87, 0xffafffaf, 0xffafffd7, 0xffafffff, 0xffb2b2b2,
+    0xffbcbcbc, 0xffc0c0c0, 0xffc6c6c6, 0xffd0d0d0, 0xffd70000, 0xffd7005f,
+    0xffd70087, 0xffd700af, 0xffd700d7, 0xffd700ff, 0xffd75f00, 0xffd75f5f,
+    0xffd75f87, 0xffd75faf, 0xffd75fd7, 0xffd75fff, 0xffd78700, 0xffd7875f,
+    0xffd78787, 0xffd787af, 0xffd787d7, 0xffd787ff, 0xffd7af00, 0xffd7af5f,
+    0xffd7af87, 0xffd7afaf, 0xffd7afd7, 0xffd7afff, 0xffd7d700, 0xffd7d75f,
+    0xffd7d787, 0xffd7d7af, 0xffd7d7d7, 0xffd7d7ff, 0xffd7ff00, 0xffd7ff5f,
+    0xffd7ff87, 0xffd7ffaf, 0xffd7ffd7, 0xffd7ffff, 0xffdadada, 0xffe4e4e4,
+    0xffeeeeee, 0xffff0000, 0xffff0028, 0xffff005f, 0xffff0087, 0xffff00af,
+    0xffff00d7, 0xffff00ff, 0xffff00ff, 0xffff5f00, 0xffff5f5f, 0xffff5f87,
+    0xffff5faf, 0xffff5fd7, 0xffff5fff, 0xffff8700, 0xffff875f, 0xffff8787,
+    0xffff87af, 0xffff87d7, 0xffff87ff, 0xffffaf00, 0xffffaf5f, 0xffffaf87,
+    0xffffafaf, 0xffffafd7, 0xffffafff, 0xffffd700, 0xffffd75f, 0xffffd787,
+    0xffffd7af, 0xffffd7d7, 0xffffd7ff, 0xffffff00, 0xffffff28, 0xffffff5f,
+    0xffffff87, 0xffffffaf, 0xffffffd7, 0xffffffff,
+};
 
 typedef struct _rkTestRGNCtx {
     const char *srcFileRawName;
@@ -48,6 +96,8 @@ typedef struct _rkTestRGNCtx {
     RK_U32      u32RawWidth;
     RK_U32      u32RawHeight;
     RK_U32      u32BmpFormat;
+    RK_BOOL     bRgnQp;
+    RK_U32      u32ClutNum;
     pthread_t   vencSendFrameTid;
     pthread_t   vencGetStreamTid;
 } TEST_RGN_CTX_S;
@@ -83,6 +133,7 @@ void* venc_get_stream(void *pArgs) {
             RK_LOGI("get chn %d stream %d", 0, s32StreamCnt);
             if (ctx->dstFilePath != RK_NULL) {
                 pData = RK_MPI_MB_Handle2VirAddr(stFrame.pstPack->pMbBlk);
+                RK_MPI_SYS_MmzFlushCache(stFrame.pstPack->pMbBlk, RK_TRUE);
                 fwrite(pData, 1, stFrame.pstPack->u32Len, fp);
                 fflush(fp);
             }
@@ -155,6 +206,7 @@ void* venc_send_frame(void *pArgs) {
         pVirAddr = reinterpret_cast<RK_S8 *>(RK_MPI_MB_Handle2VirAddr(blk));
 
         memcpy(pVirAddr, pData, u32SrcSize);
+        RK_MPI_SYS_MmzFlushCache(blk, RK_FALSE);
         memset(&stFrame, 0, sizeof(VIDEO_FRAME_INFO_S));
         stFrame.stVFrame.pMbBlk = blk;
         stFrame.stVFrame.u32Width = ctx->u32RawWidth;
@@ -211,6 +263,7 @@ static RK_S32 test_venc_start(VENC_CHN VencChn, TEST_RGN_CTX_S *pstCtx) {
     if (s32Ret != RK_SUCCESS) {
         return s32Ret;
     }
+    stRecvParam.s32RecvPicNum = -1;
     s32Ret = RK_MPI_VENC_StartRecvFrame(VencChn, &stRecvParam);
     if (s32Ret != RK_SUCCESS) {
         return s32Ret;
@@ -298,7 +351,7 @@ RK_S32 test_rgn_load_bmp(const RK_CHAR *filename, BITMAP_S *pstBitmap, TEST_RGN_
     OSD_BITMAPFILEHEADER bmpFileHeader;
     OSD_BITMAPINFO bmpInfo;
 
-    if (get_bmp_info(filename, &bmpFileHeader, &bmpInfo) < 0) {
+    if (TEST_COMM_GetBmpInfo(filename, &bmpFileHeader, &bmpInfo) < 0) {
         RK_LOGE("GetBmpInfo err!\n");
         return RK_FAILURE;
     }
@@ -316,6 +369,12 @@ RK_S32 test_rgn_load_bmp(const RK_CHAR *filename, BITMAP_S *pstBitmap, TEST_RGN_
       case RK_FMT_BGRA5551:
         Surface.enColorFmt = OSD_COLOR_FMT_BGRA5551;
       break;
+      case RK_FMT_ARGB4444:
+        Surface.enColorFmt = OSD_COLOR_FMT_ARGB4444;
+      break;
+      case RK_FMT_BGRA4444:
+        Surface.enColorFmt = OSD_COLOR_FMT_BGRA4444;
+      break;
       default:
         return RK_FAILURE;
     }
@@ -327,7 +386,7 @@ RK_S32 test_rgn_load_bmp(const RK_CHAR *filename, BITMAP_S *pstBitmap, TEST_RGN_
         return RK_FAILURE;
     }
 
-    create_surface_by_bitmap(filename, &Surface, reinterpret_cast<RK_U8 *>(pstBitmap->pData));
+    TEST_COMM_CreateSurfaceByBitmap(filename, &Surface, reinterpret_cast<RK_U8 *>(pstBitmap->pData));
 
     pstBitmap->u32Width = Surface.u16Width;
     pstBitmap->u32Height = Surface.u16Height;
@@ -348,6 +407,7 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
     VENC_ATTR_S     stVencAttr;
     RK_BOOL         bShow;
 
+    memset(&stRgnAttr, 0, sizeof(stRgnAttr));
     VencChn = 0;
     s32Ret = test_venc_start(VencChn, pstRgnCtx);
     if (s32Ret != RK_SUCCESS) {
@@ -357,11 +417,14 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
     /****************************************
      step 1: create overlay regions
     ****************************************/
-    for (RK_S32 i = 0; i< pstRgnCtx->s32RgnCount; i++) {
+    for (RK_S32 i = 0; i < pstRgnCtx->s32RgnCount; i++) {
         stRgnAttr.enType = OVERLAY_RGN;
         stRgnAttr.unAttr.stOverlay.enPixelFmt = (PIXEL_FORMAT_E)pstRgnCtx->u32BmpFormat;
         stRgnAttr.unAttr.stOverlay.stSize.u32Width  = pstRgnCtx->stRegion.u32Width;
         stRgnAttr.unAttr.stOverlay.stSize.u32Height = pstRgnCtx->stRegion.u32Height;
+        stRgnAttr.unAttr.stOverlay.u32ClutNum = pstRgnCtx->u32ClutNum;
+        if (pstRgnCtx->u32ClutNum)
+            memcpy(stRgnAttr.unAttr.stOverlay.u32Clut, u32BGRA8888ColorTblUser, sizeof(u32BGRA8888ColorTblUser));
 
         RgnHandle = i;
 
@@ -392,6 +455,10 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
         stRgnChnAttr.unChnAttr.stOverlayChn.u32BgAlpha = 128;
         stRgnChnAttr.unChnAttr.stOverlayChn.u32FgAlpha = 128;
         stRgnChnAttr.unChnAttr.stOverlayChn.u32Layer = i;
+        stRgnChnAttr.unChnAttr.stOverlayChn.stQpInfo.bEnable = pstRgnCtx->bRgnQp;
+        stRgnChnAttr.unChnAttr.stOverlayChn.stQpInfo.bForceIntra = RK_TRUE;
+        stRgnChnAttr.unChnAttr.stOverlayChn.stQpInfo.bAbsQp = RK_FALSE;
+        stRgnChnAttr.unChnAttr.stOverlayChn.stQpInfo.s32Qp = -10 * (i + 1);
         s32Ret = RK_MPI_RGN_AttachToChn(RgnHandle, &stMppChn, &stRgnChnAttr);
         if (RK_SUCCESS != s32Ret) {
             RK_LOGE("RK_MPI_RGN_AttachToChn (%d) failed with %#x!", RgnHandle, s32Ret);
@@ -405,14 +472,14 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
     /*********************************************
      step 3: show bitmap
     *********************************************/
-    RK_S64 s64ShowBmpStart = mpi_test_utils_get_now_us();
+    RK_S64 s64ShowBmpStart = TEST_COMM_GetNowUs();
     s32Ret = test_rgn_load_bmp(pstRgnCtx->srcFileBmpName, &stBitmap, pstRgnCtx);
     if (RK_SUCCESS != s32Ret) {
         RK_LOGE("Load bmp failed with %#x!", s32Ret);
         return RK_FAILURE;
     }
 
-    for (RK_S32 i = 0; i< pstRgnCtx->s32RgnCount; i++) {
+    for (RK_S32 i = 0; i < pstRgnCtx->s32RgnCount; i++) {
         RgnHandle = i;
 
         s32Ret = RK_MPI_RGN_SetBitMap(RgnHandle, &stBitmap);
@@ -426,15 +493,42 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
         free(stBitmap.pData);
         stBitmap.pData = NULL;
     }
-    RK_S64 s64ShowBmpEnd = mpi_test_utils_get_now_us();
+    RK_S64 s64ShowBmpEnd = TEST_COMM_GetNowUs();
 
     RK_LOGI("Handle:%d, space time %lld us, load bmp success!", RgnHandle, s64ShowBmpEnd - s64ShowBmpStart);
     usleep(1000000);
 
     /*********************************************
-     step 4: change overlay regions' position
+     step 4: use update canvas interface
     *********************************************/
-    RK_S64 s64ChgPosStart = mpi_test_utils_get_now_us();
+    s64ShowBmpStart = TEST_COMM_GetNowUs();
+    for (RK_S32 i = 0; i < pstRgnCtx->s32RgnCount; i++) {
+        RGN_CANVAS_INFO_S stCanvasInfo;
+        RgnHandle = i;
+
+        memset(&stCanvasInfo, 0, sizeof(RGN_CANVAS_INFO_S));
+
+        s32Ret = RK_MPI_RGN_GetCanvasInfo(RgnHandle, &stCanvasInfo);
+        if (s32Ret != RK_SUCCESS) {
+            RK_LOGE("RK_MPI_RGN_GetCanvasInfo failed with %#x!", s32Ret);
+            return RK_FAILURE;
+        }
+        memset(reinterpret_cast<void *>(stCanvasInfo.u64VirAddr), 0xff,
+                stCanvasInfo.u32VirWidth * 16 * (i + 1));
+        s32Ret = RK_MPI_RGN_UpdateCanvas(RgnHandle);
+        if (s32Ret != RK_SUCCESS) {
+            RK_LOGE("RK_MPI_RGN_UpdateCanvas failed with %#x!", s32Ret);
+            return RK_FAILURE;
+        }
+    }
+    s64ShowBmpEnd = TEST_COMM_GetNowUs();
+    RK_LOGI("Handle:%d, space time %lld us, update canvas success!", RgnHandle, s64ShowBmpEnd - s64ShowBmpStart);
+    usleep(1000000);
+
+    /*********************************************
+     step 5: change overlay regions' position
+    *********************************************/
+    RK_S64 s64ChgPosStart = TEST_COMM_GetNowUs();
     RgnHandle = 0;
 
     VencChn = 0;
@@ -446,14 +540,14 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
         return RK_FAILURE;
     }
 
-    RK_S64 s64ChgPosEnd = mpi_test_utils_get_now_us();
+    RK_S64 s64ChgPosEnd = TEST_COMM_GetNowUs();
 
     RK_LOGI("Handle:%d, space time %lld us, change point success,new point(x:%d,y:%d)!",
         RgnHandle, s64ChgPosEnd - s64ChgPosStart, stPoint.s32X, stPoint.s32Y);
     usleep(5000);
 
     /*********************************************
-     step 5: show or hide overlay regions
+     step 6: show or hide overlay regions
     *********************************************/
     RgnHandle = 0;
     bShow = RK_FALSE;
@@ -474,7 +568,7 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
     RK_LOGI("Handle:%d, show or hide osd success", RgnHandle);
 
     /*********************************************
-     step 6: Detach osd from chn
+     step 7: Detach osd from chn
     *********************************************/
     for (RK_S32 i = 0; i < pstRgnCtx->s32RgnCount; i++) {
         RgnHandle = i;
@@ -494,7 +588,7 @@ RK_S32 test_rgn_overlay_process(TEST_RGN_CTX_S *pstRgnCtx) {
     }
 
     /*********************************************
-     step 7: destory region
+     step 8: destory region
     *********************************************/
     for (RK_S32 i = 0; i < pstRgnCtx->s32RgnCount; i++) {
         RgnHandle = i;
@@ -678,6 +772,7 @@ static void mpi_rgn_test_show_options(const TEST_RGN_CTX_S *ctx) {
     RK_PRINT("rgn canvas height         : %d\n", ctx->stRegion.u32Height);
     RK_PRINT("rgn raw width             : %d\n", ctx->u32RawWidth);
     RK_PRINT("rgn raw height            : %d\n", ctx->u32RawHeight);
+    RK_PRINT("clut num                  : %d\n", ctx->u32ClutNum);
 }
 
 static const char *const usages[] = {
@@ -694,6 +789,7 @@ int main(int argc, const char **argv) {
     stRgnCtx.s32LoopCount   = 1;
     stRgnCtx.s32RgnCount    = 1;
     stRgnCtx.u32BmpFormat   = RK_FMT_BGRA5551;
+    stRgnCtx.bRgnQp         = RK_FALSE;
 
     struct argparse_option options[] = {
         OPT_HELP(),
@@ -716,12 +812,16 @@ int main(int argc, const char **argv) {
                     "bmp width. default(0). <required>", NULL, 0, 0),
         OPT_INTEGER('h', "bmp_h", &(stRgnCtx.stRegion.u32Height),
                     "bmp height. default(0). <required>", NULL, 0, 0),
+        OPT_INTEGER('q', "rgn_qp", &(stRgnCtx.bRgnQp),
+                    "rgn roi qp. default(0). ", NULL, 0, 0),
         OPT_INTEGER('W', "raw_w", &(stRgnCtx.u32RawWidth),
                     "raw width. default(0). <required>", NULL, 0, 0),
         OPT_INTEGER('H', "raw_h", &(stRgnCtx.u32RawHeight),
                     "raw height. default(0). <required>", NULL, 0, 0),
         OPT_INTEGER('f', "format", &(stRgnCtx.u32BmpFormat),
                     "bmp pixel format. default(65557). 65546: ARGB1555, 65557: BGRA5551", NULL, 0, 0),
+        OPT_INTEGER('\0', "clut_num", &(stRgnCtx.u32ClutNum),
+                    "set color loop up table num. default(0). range[0, 255].", NULL, 0, 0),
         OPT_END(),
     };
 
