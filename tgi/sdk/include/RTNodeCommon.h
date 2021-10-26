@@ -48,6 +48,7 @@
 #define NODE_NAME_AIMATTING     "ai_matting"
 #define NODE_NAME_GLPSS         "rkglpss"
 #define NODE_NAME_VPSS          "rkvpss"
+#define NODE_NAME_AVS           "rkavs"
 
 #define NODE_NAME_RESAMPLE      "resample"
 #define NODE_NAME_ALSA_CAPTURE  "alsa_capture"
@@ -70,8 +71,8 @@
 #define NODE_NAME_VOLUME        "filter_volume"
 #define NODE_NAME_LINK_OUTPUT   "link_output"
 #define NODE_NAME_SOURCE_EXTERNAL  "external_source"
-#define NODE_NAME_AUDIO_DEC_TMEDIA  "audio_dec_tmedia"
-#define NODE_NAME_AUDIO_ENC_TMEDIA  "audio_enc_tmedia"
+#define NODE_NAME_AUDIO_DEC     "audio_dec"
+#define NODE_NAME_AUDIO_ENC     "audio_enc"
 
 #define NODE_PORT_SOURCE  "source"
 #define NODE_PORT_DEVICE  "device"
@@ -100,6 +101,7 @@
 #define KEY_ROOT_NODE_OPTS_EXTRA         "node_opts_extra"
 #define KEY_ROOT_STREAM_OPTS             "stream_opts"
 #define KEY_ROOT_STREAM_OPTS_EXTRA       "stream_opts_extra"
+#define KEY_ROOT_THREAD_OPTS             "thread_opts"
 #define KEY_ROOT_EXEC_OPTS               "executor_opts"
 #define KEY_ROOT_DEFAULT_LINK_MODE       "default_mode_link"
 
@@ -175,6 +177,7 @@
 #define OPT_VIDEO_NALU_TYPE              "opt_nalu_type"
 #define OPT_VIDEO_EN_DEI                 "opt_en_dei"
 #define OPT_VIDEO_EN_COLMV               "opt_en_colmv"
+#define OPT_VIDEO_MAX_DEC_BUFFERING      "opt_max_dec_buffering"
 
 /* draw line in picture */
 #define OPT_LINE_START_X                 "opt_line_startx"

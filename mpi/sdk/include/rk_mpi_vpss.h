@@ -92,6 +92,12 @@ RK_S32 RK_MPI_VPSS_DetachMbPool(VPSS_GRP VpssGrp, VPSS_CHN VpssChn);
 RK_S32 RK_MPI_VPSS_EnableBufferShare(VPSS_GRP VpssGrp, VPSS_CHN VpssChn);
 RK_S32 RK_MPI_VPSS_DisableBufferShare(VPSS_GRP VpssGrp, VPSS_CHN VpssChn);
 
+RK_S32 RK_MPI_VPSS_GetChnFd(VPSS_GRP VpssGrp, VPSS_CHN VpssChn);
+RK_S32 RK_MPI_VPSS_CloseFd(VPSS_GRP VpssGrp, VPSS_CHN VpssChn);
+
+RK_S32 RK_MPI_VPSS_SetWorkUnit(VPSS_GRP VpssGrp, VPSS_WORK_UNIT_E enWorkUnit);
+RK_S32 RK_MPI_VPSS_GetWorkUnit(VPSS_GRP VpssGrp, VPSS_WORK_UNIT_E *enWorkUnit);
+
 #ifdef __cplusplus
 #if __cplusplus
 }

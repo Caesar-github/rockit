@@ -59,7 +59,6 @@ RK_S32 RK_MPI_VGS_EndJob(VGS_HANDLE hHandle);
  Calls        :
  Called By    :
 *****************************************************************************/
-
 RK_S32 RK_MPI_VGS_CancelJob(VGS_HANDLE hHandle);
 
 /*****************************************************************************
@@ -71,7 +70,6 @@ RK_S32 RK_MPI_VGS_CancelJob(VGS_HANDLE hHandle);
  Calls        :
  Called By    :
 *****************************************************************************/
-
 RK_S32 RK_MPI_VGS_AddScaleTask(VGS_HANDLE hHandle, const VGS_TASK_ATTR_S *pstTask, VGS_SCLCOEF_MODE_E enScaleCoefMode);
 
 /*****************************************************************************

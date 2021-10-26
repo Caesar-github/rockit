@@ -98,7 +98,7 @@ typedef enum rkEN_ADEC_ERR_CODE_E {
 /* no buffer for new data */
 #define RK_ERR_ADEC_BUF_FULL          RK_DEF_ERR(RK_ID_ADEC, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
 /* system is not ready,had not initialed or loaded*/
-#define RK_ERR_ADEC_SYS_NOTREADY      RK_DEF_ERR(RK_ID_ADEC, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_ADEC_SYS_NOTREADY      RK_DEF_ERR(RK_ID_ADEC, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 /* decoder internal err */
 #define RK_ERR_ADEC_DECODER_ERR       RK_DEF_ERR(RK_ID_ADEC, RK_ERR_LEVEL_ERROR, ADEC_ERR_DECODER_ERR)
 /* input buffer not enough to decode one frame */

@@ -25,6 +25,7 @@ class RTVideoPacket : public RTAVShellBuffer {
     virtual ~RTVideoPacket() = default;
 
     virtual RTMediaBufferType getType();
+    virtual void reset();
 
     UINT64    getPts() const;
     UINT64    getDts() const;
@@ -41,9 +42,6 @@ class RTVideoPacket : public RTAVShellBuffer {
     void  setDuration(const INT32 duration);
     void  setSeq(const INT32 seq);
     void  setIsExtraData(const INT32 isExtraData);
-
- protected:
-    virtual void reset();
 
  private:
     void baseInit();

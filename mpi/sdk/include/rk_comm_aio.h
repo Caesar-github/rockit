@@ -227,7 +227,7 @@ typedef enum rkEN_AIO_ERR_CODE_E {
 /* no buffer for new data */
 #define RK_ERR_AI_BUF_FULL          RK_DEF_ERR(RK_ID_AI, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
 /* system is not ready,had not initialed or loaded*/
-#define RK_ERR_AI_SYS_NOTREADY      RK_DEF_ERR(RK_ID_AI, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_AI_SYS_NOTREADY      RK_DEF_ERR(RK_ID_AI, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 
 #define RK_ERR_AI_BUSY              RK_DEF_ERR(RK_ID_AI, RK_ERR_LEVEL_ERROR, RK_ERR_BUSY)
 /* vqe  err */
@@ -258,7 +258,7 @@ typedef enum rkEN_AIO_ERR_CODE_E {
 /* no buffer for new data */
 #define RK_ERR_AO_BUF_FULL          RK_DEF_ERR(RK_ID_AO, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
 /* system is not ready,had not initialed or loaded*/
-#define RK_ERR_AO_SYS_NOTREADY      RK_DEF_ERR(RK_ID_AO, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_AO_SYS_NOTREADY      RK_DEF_ERR(RK_ID_AO, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 
 #define RK_ERR_AO_BUSY              RK_DEF_ERR(RK_ID_AO, RK_ERR_LEVEL_ERROR, RK_ERR_BUSY)
 /* vqe  err */

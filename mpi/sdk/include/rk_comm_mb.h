@@ -20,7 +20,6 @@
 
 #include "rk_type.h"
 #include "rk_errno.h"
-#include "rk_defines.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -38,7 +37,8 @@ typedef enum rkMB_UID_E {
     MB_UID_AI = 6,
     MB_UID_AENC = 7,
     MB_UID_ADEC = 8,
-    MB_UID_BUTT = 9
+    MB_UID_AVS = 9,
+    MB_UID_BUTT = 10
 } MB_UID_E;
 
 #define MB_INVALID_POOLID              (-1U)
@@ -114,7 +114,7 @@ typedef struct _rkMB_EXT_CONFIG_S {
 #define RK_ERR_MB_NOBUF                RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_NOBUF)
 #define RK_ERR_MB_UNEXIST              RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_UNEXIST)
 #define RK_ERR_MB_ILLEGAL_PARAM        RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_ILLEGAL_PARAM)
-#define RK_ERR_MB_NOTREADY             RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_MB_NOTREADY             RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 #define RK_ERR_MB_BUSY                 RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_BUSY)
 #define RK_ERR_MB_NOT_PERM             RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_NOT_PERM)
 #define RK_ERR_MB_SIZE_NOT_ENOUGH      RK_DEF_ERR(RK_ID_MB, RK_ERR_LEVEL_ERROR, RK_ERR_SIZE_NOT_ENOUGH)

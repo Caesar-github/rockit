@@ -23,7 +23,6 @@
 #include "rk_errno.h"
 #include "rk_comm_video.h"
 #include "rk_comm_rc.h"
-#include "rk_defines.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -56,10 +55,13 @@ extern "C" {
 /* no buffer for new data */
 #define RK_ERR_VENC_BUF_FULL      RK_DEF_ERR(RK_ID_VENC, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
 /* system is not ready,had not initialed or loaded */
-#define RK_ERR_VENC_SYS_NOTREADY  RK_DEF_ERR(RK_ID_VENC, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_VENC_SYS_NOTREADY  RK_DEF_ERR(RK_ID_VENC, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 /* system is busy */
 #define RK_ERR_VENC_BUSY          RK_DEF_ERR(RK_ID_VENC, RK_ERR_LEVEL_ERROR, RK_ERR_BUSY)
 
+#define VENC_QP_SGRM_NUM               52
+#define MAX_TILE_NUM                   1
+#define RC_TEXTURE_THR_SIZE            16
 
 /* the nalu type of H264E */
 typedef enum rkH264E_NALU_TYPE_E {
@@ -614,7 +616,7 @@ typedef struct rkVENC_ROIBG_FRAME_RATE_S {
 typedef struct rkVENC_REF_PARAM_S {
     RK_U32       u32Base;                          /* RW; Range:[0,4294967295]; Base layer period*/
     RK_U32       u32Enhance;                       /* RW; Range:[0,255]; Enhance layer period*/
-	/* RW; Range:[0, 1]; Whether some frames at the base layer are referenced by other frames at the base layer. 
+	/* RW; Range:[0, 1]; Whether some frames at the base layer are referenced by other frames at the base layer.
 	 * When bEnablePred is rk_FALSE, all frames at the base layer reference IDR frames.
 	 */
     RK_BOOL      bEnablePred;

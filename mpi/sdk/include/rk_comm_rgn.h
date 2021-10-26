@@ -21,7 +21,6 @@
 #include "rk_common.h"
 #include "rk_comm_video.h"
 #include "rk_errno.h"
-#include "rk_defines.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -30,6 +29,35 @@ extern "C" {
 #endif /* End of #ifdef __cplusplus */
 
 typedef RK_U32 RGN_HANDLE;
+
+#define RGN_CLUT_NUM                   256
+#define RGN_MAX_BUF_NUM                2
+
+#define RGN_MIN_WIDTH                  16
+#define RGN_MIN_HEIGHT                 16
+
+#define RGN_COVER_MIN_X                0
+#define RGN_COVER_MIN_Y                0
+#define RGN_COVER_MAX_X                8192
+#define RGN_COVER_MAX_Y                8192
+#define RGN_COVER_MAX_WIDTH            8192
+#define RGN_COVER_MAX_HEIGHT           8192
+
+#define RGN_OVERLAY_MIN_X              0
+#define RGN_OVERLAY_MIN_Y              0
+#define RGN_OVERLAY_MAX_X              8192
+#define RGN_OVERLAY_MAX_Y              8192
+#define RGN_OVERLAY_MAX_WIDTH          8192
+#define RGN_OVERLAY_MAX_HEIGHT         8192
+
+#define RGN_MOSAIC_MIN_X               0
+#define RGN_MOSAIC_MIN_Y               0
+#define RGN_MOSAIC_MAX_X               8192
+#define RGN_MOSAIC_MAX_Y               8192
+#define RGN_MOSAIC_MIN_WIDTH           32
+#define RGN_MOSAIC_MIN_HEIGHT          32
+#define RGN_MOSAIC_MAX_WIDTH           8192
+#define RGN_MOSAIC_MAX_HEIGHT          8192
 
 /* type of video regions */
 typedef enum rkRGN_TYPE_E {
@@ -179,7 +207,7 @@ typedef struct rkRGN_CANVAS_INFO_S {
 /* System is not ready,maybe not initialed or loaded.
  * Returning the error code when opening a device file failed.
  */
-#define RK_ERR_RGN_NOTREADY          RK_DEF_ERR(RK_ID_RGN, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_RGN_NOTREADY          RK_DEF_ERR(RK_ID_RGN, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 
 #ifdef __cplusplus
 #if __cplusplus

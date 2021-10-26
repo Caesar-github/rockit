@@ -22,7 +22,7 @@
 
 #include "rt_header.h"  // NOLINT
 #include <stdarg.h>
-#include <string.h>
+#include <string>
 
 #ifndef LOG_TAG
 #define LOG_TAG NULL
@@ -36,7 +36,7 @@
 #define RT_LOG_DEBUG      5   /* debug-level messages                 */
 #define RT_LOG_VERBOSE    6   /* verbose                              */
 
-#define LOG_LEVEL         RT_LOG_DEBUG
+#define LOG_LEVEL         RT_LOG_WARN
 #define LOG_FLAG          0
 
 //! super macro.

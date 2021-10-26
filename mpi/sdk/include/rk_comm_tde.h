@@ -30,9 +30,6 @@ extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
 
-#define TDE_MAX_JOB_NUM                          128
-#define TDE_MAX_TASK_NUM                         200
-
 // error code
 enum {
     RK_ERR_NOT_ALIGNED = RK_ERR_BUTT - 1,  /* <  aligned error for position, stride, width */
@@ -76,6 +73,8 @@ typedef struct rkTDE_SURFACE_S {
     RK_U32 u32Height; /* <Bitmap height */
 
     RK_U32 u32Width; /* <Bitmap width */
+
+    COMPRESS_MODE_E enComprocessMode; /* compress type */
 } TDE_SURFACE_S;
 
 /* Definition of the TDE rectangle */
