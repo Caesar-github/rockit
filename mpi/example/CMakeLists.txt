@@ -18,4 +18,4 @@ add_subdirectory(common)
 add_subdirectory(mod)
 add_subdirectory(sundry)
 
-install(FILES ${ROCKIT_DUMPSYS_FILE} DESTINATION "bin")
+install(PROGRAMS ${ROCKIT_DUMPSYS_FILE} DESTINATION "bin")
