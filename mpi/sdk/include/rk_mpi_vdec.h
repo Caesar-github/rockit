@@ -62,6 +62,10 @@ RK_S32 RK_MPI_VDEC_CloseFd(VDEC_CHN VdChn);
 RK_S32 RK_MPI_VDEC_AttachMbPool(VDEC_CHN VdChn, MB_POOL hMbPool);
 RK_S32 RK_MPI_VDEC_DetachMbPool(VDEC_CHN VdChn);
 
+RK_S32 RK_MPI_VDEC_SetUserPic(VDEC_CHN VdChn, const VIDEO_FRAME_INFO_S *pstUsrPic);
+RK_S32 RK_MPI_VDEC_EnableUserPic(VDEC_CHN VdChn, RK_BOOL bInstant);
+RK_S32 RK_MPI_VDEC_DisableUserPic(VDEC_CHN VdChn);
+
 #ifdef __cplusplus
 #if __cplusplus
 }

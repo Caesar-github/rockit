@@ -8,6 +8,7 @@ set(ROCKIT_DEP_COMMON_LIBS
 set(ROCKIT_FILE_LIBS
     ${ROCKIT_DEP_COMMON_LIBS}
     ${CMAKE_CURRENT_LIST_DIR}/sdk/lib64/libgraphic_lsf.so
+    ${CMAKE_CURRENT_LIST_DIR}/sdk/lib64/librkgfx_avs.so
 )
 set(ROCKIT_DUMPSYS_FILE ${CMAKE_CURRENT_LIST_DIR}/example/bin/bin64/dumpsys)
 else()

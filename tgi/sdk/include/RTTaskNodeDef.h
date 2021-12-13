@@ -34,8 +34,8 @@ typedef enum _RTStubUid {
     /* node stubs for media codec */
     kStubCodecMppDecoder     = MKTAG('c', 'm', 'd', 'c'),
     kStubCodecMppEncoder     = MKTAG('c', 'm', 'e', 'e'),
-    kStubCodecFFAudioDecoder = MKTAG('c', 'a', 'o', 'd'),
-    kStubCodecFFAudioEncoder = MKTAG('c', 'a', 'o', 'e'),
+    kStubCodecAudioDecoder   = MKTAG('c', 'a', 'o', 'd'),
+    kStubCodecAudioEncoder   = MKTAG('c', 'a', 'o', 'e'),
 
     /* node stubs for media sink */
     kStubSinkVideo         = MKTAG('s', 'v', 'i', 'd'),
@@ -57,6 +57,7 @@ typedef enum _RTStubUid {
     kStubfilterAnr         = MKTAG('f', 'a', 'n', 'r'),
     kStubfilterGLPss       = MKTAG('g', 'l', 'p', 's'),
     kStubfilterVpss        = MKTAG('v', 'p', 's', 's'),
+    kStubFilterAvs         = MKTAG('f', 'a', 'v', 's'),
     kStubFilterMpiVo       = MKTAG('f', 'm', 'v', 'o'),
     kStubFilterWbcVo       = MKTAG('f', 'w', 'v', 'o'),
 

@@ -50,7 +50,6 @@ typedef enum GraphCmd {
     GRAPH_CMD_MAX,
 } RTGraphCmd;
 
-class RTTracePerf;
 class RTInputStreamManager;
 class RTOutputStreamManager;
 class RTTaskNode;
@@ -138,7 +137,7 @@ class RTTaskGraph {
     RTCBHandle  addOutputStreamPoller(const std::string streamName);
     RT_RET      removeOutputStreamPoller(RTCBHandle handle);
     RT_RET      checkInputStreamFull(std::string streamName);
-    virtual RT_RET onReceiveOutputStreams() { return RT_OK; }
+    virtual RT_RET onReceiveOutputStreams(RTGraphOutputStream *graphOutputStream) { return RT_OK; }
 
  private:
     template <class T, class... Args>
@@ -184,6 +183,7 @@ class RTTaskGraph {
     RT_RET      prepareNodeForRun(RTTaskNode *node, RtMetaData *options);
     RT_RET      cleanupAfterRun();
     void        updateThrottledNodes(RTInputStreamManager* stream, bool *streamWasFull);
+    void        updateThrottledNodesNoLock(RTInputStreamManager* stream, bool *streamWasFull);
     RT_RET      buildTaskNode(INT32 pipeId, INT32 nodeId, RTGraphParser* nodeParser);
     RT_RET      buildExecutors(RTGraphParser *parser);
     RT_RET      buildNodes(RTGraphParser *parser);
@@ -207,8 +207,7 @@ class RTTaskGraph {
     RtMutex             *mLock;
     RTTaskGraphConfig   *mGraphConfig;
     RTGraphIOStreamMode  mIoStreamMode;
-    INT64                mAddPacketCount;
-    RTTracePerf         *mTracePerf;
+    INT32                mThreadNum;
     std::map<INT32, RTExecutor *>                         mExecutors;
     RTExecutor                                           *mExtExecutor;
     std::map<INT32/* node id */, RTTaskNode *>            mNodes;
@@ -225,9 +224,6 @@ class RTTaskGraph {
     // Compatible with old interfaces
     std::map<INT32/* old stream id */, std::string>       mOutputStreamCompMaps;
     std::map<INT32/* old stream id */, RTCBHandle>        mGraphOutCompMaps;
-
- private:
-    INT32 mFirstOutputStreamId;
 };
 
 #endif  // SRC_RT_TASK_APP_GRAPH_RTTASKGRAPH_H_

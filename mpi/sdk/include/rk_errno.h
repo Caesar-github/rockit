@@ -100,7 +100,7 @@ typedef enum rkEN_ERR_CODE_E {
      * loaded. Returning the error code when opening
      * a device file failed.
      */
-    RK_ERR_SYS_NOTREADY  = 16,
+    RK_ERR_NOTREADY      = 16,
     /*
      * bad address,
      * eg. used for copy_from_user & copy_to_user

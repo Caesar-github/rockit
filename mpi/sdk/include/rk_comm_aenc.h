@@ -74,7 +74,7 @@ typedef enum rkEN_AENC_ERR_CODE_E {
 /* no buffer for new data */
 #define RK_ERR_AENC_BUF_FULL          RK_DEF_ERR(RK_ID_AENC, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
 /* system is not ready,had not initialed or loaded*/
-#define RK_ERR_AENC_SYS_NOTREADY      RK_DEF_ERR(RK_ID_AENC, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_AENC_SYS_NOTREADY      RK_DEF_ERR(RK_ID_AENC, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 /* encoder internal err */
 #define RK_ERR_AENC_ENCODER_ERR       RK_DEF_ERR(RK_ID_AENC, RK_ERR_LEVEL_ERROR, AENC_ERR_ENCODER_ERR)
 /* vqe internal err */

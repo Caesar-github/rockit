@@ -28,12 +28,12 @@
 #include "rt_header.h"
 #include "rt_metadata.h"
 #include "RTStreamInfo.h"
+#include "RTTaskNodeContext.h"
 
-class RTTaskNodeContext;
 class RTTaskNodeContextManager {
  public:
     RTTaskNodeContextManager() {}
-    ~RTTaskNodeContextManager() {}
+    virtual ~RTTaskNodeContextManager() {}
 
     RT_RET initialize(
         std::string nodeName,

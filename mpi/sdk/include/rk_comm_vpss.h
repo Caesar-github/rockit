@@ -32,7 +32,7 @@ extern "C" {
 
 #define RK_VPSS_OK                   RK_SUCCESS
 #define RK_ERR_VPSS_NULL_PTR         RK_DEF_ERR(RK_ID_VPSS, RK_ERR_LEVEL_ERROR, RK_ERR_NULL_PTR)
-#define RK_ERR_VPSS_NOTREADY         RK_DEF_ERR(RK_ID_VPSS, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_VPSS_NOTREADY         RK_DEF_ERR(RK_ID_VPSS, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 #define RK_ERR_VPSS_INVALID_DEVID    RK_DEF_ERR(RK_ID_VPSS, RK_ERR_LEVEL_ERROR, RK_ERR_INVALID_DEVID)
 #define RK_ERR_VPSS_INVALID_CHNID    RK_DEF_ERR(RK_ID_VPSS, RK_ERR_LEVEL_ERROR, RK_ERR_INVALID_CHNID)
 #define RK_ERR_VPSS_EXIST            RK_DEF_ERR(RK_ID_VPSS, RK_ERR_LEVEL_ERROR, RK_ERR_EXIST)
@@ -89,6 +89,11 @@ typedef enum rkVPSS_CROP_COORDINATE_E {
     VPSS_CROP_RATIO_COOR = 0,   /* Ratio coordinate. */
     VPSS_CROP_ABS_COOR          /* Absolute coordinate. */
 } VPSS_CROP_COORDINATE_E;
+
+typedef enum rkVPSS_WORK_UNIT_E {
+    VPSS_WORK_UNIT_RGA = 0,       /*  */
+    VPSS_WORK_UNIT_GPU            /*  */
+} VPSS_WORK_UNIT_E;
 
 typedef struct rkVPSS_CROP_INFO_S {
     RK_BOOL                 bEnable;            /* RW; Range: [0, 1];  CROP enable. */

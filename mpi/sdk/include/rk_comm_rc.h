@@ -20,7 +20,6 @@
 
 #include "rk_type.h"
 #include "rk_errno.h"
-#include "rk_defines.h"
 
 #ifdef __cplusplus
 #if __cplusplus

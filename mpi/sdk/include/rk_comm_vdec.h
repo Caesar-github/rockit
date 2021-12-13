@@ -23,7 +23,6 @@
 #include "rk_errno.h"
 #include "rk_comm_video.h"
 #include "rk_comm_mb.h"
-#include "rk_defines.h"
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -54,7 +53,6 @@ typedef enum rkVIDEO_MODE_E {
     /* The current frame is considered to end when bEndOfFrame is equal to RK_TRUE */
     VIDEO_MODE_BUTT
 } VIDEO_MODE_E;
-
 
 typedef struct rkVDEC_PARAM_VIDEO_S {
     RK_BOOL bDeiEn; /* RW, deinterlace enable */
@@ -207,7 +205,7 @@ typedef struct rkVDEC_MOD_PARAM_S {
 /* no buffer for new data */
 #define RK_ERR_VDEC_BUF_FULL      RK_DEF_ERR(RK_ID_VDEC, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
 /* system is not ready,had not initialed or loaded */
-#define RK_ERR_VDEC_SYS_NOTREADY  RK_DEF_ERR(RK_ID_VDEC, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_VDEC_SYS_NOTREADY  RK_DEF_ERR(RK_ID_VDEC, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 /* system busy */
 #define RK_ERR_VDEC_BUSY          RK_DEF_ERR(RK_ID_VDEC, RK_ERR_LEVEL_ERROR, RK_ERR_BUSY)
 /* bad address,  eg. used for copy_from_user & copy_to_user   */

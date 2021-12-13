@@ -78,7 +78,7 @@ typedef enum rkEN_VOU_ERR_CODE_E {
 #define RK_ERR_VO_BUSY                 RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_BUSY)
 #define RK_ERR_VO_NO_MEM               RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_NOMEM)
 #define RK_ERR_VO_NULL_PTR             RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_NULL_PTR)
-#define RK_ERR_VO_SYS_NOTREADY         RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_VO_SYS_NOTREADY         RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 #define RK_ERR_VO_INVALID_DEVID        RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_INVALID_DEVID)
 #define RK_ERR_VO_INVALID_CHNID        RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_INVALID_CHNID)
 #define RK_ERR_VO_ILLEGAL_PARAM        RK_DEF_ERR(RK_ID_VO, RK_ERR_LEVEL_ERROR, RK_ERR_ILLEGAL_PARAM)
@@ -135,18 +135,16 @@ typedef enum rkEN_VOU_ERR_CODE_E {
 #define VO_INTF_VGA                    (0x01L << 2)
 #define VO_INTF_BT656                  (0x01L << 3)
 #define VO_INTF_BT1120                 (0x01L << 4)
-#define VO_INTF_HDMI                   (0x01L << 5)
 #define VO_INTF_LCD                    (0x01L << 6)
 #define VO_INTF_LVDS                   (0x01L << 7)
-#define VO_INTF_DP                     (0x01L << 8)
-#define VO_INTF_LCD_6BIT               (0x01L << 9)
-#define VO_INTF_LCD_8BIT               (0x01L << 10)
-#define VO_INTF_LCD_16BIT              (0x01L << 11)
-#define VO_INTF_LCD_18BIT              (0x01L << 12)
-#define VO_INTF_LCD_24BIT              (0x01L << 13)
-#define VO_INTF_MIPI                   (0x01L << 14)
-#define VO_INTF_MIPI_SLAVE             (0x01L << 15)
-#define VO_INTF_EDP                    (0x01L << 16)
+#define VO_INTF_MIPI                   (0x01L << 9)
+#define VO_INTF_MIPI1                  (0x01L << 10)
+#define VO_INTF_EDP                    (0x01L << 11)
+#define VO_INTF_EDP1                   (0x01L << 12)
+#define VO_INTF_HDMI                   (0x01L << 13)
+#define VO_INTF_HDMI1                  (0x01L << 14)
+#define VO_INTF_DP                     (0x01L << 15)
+#define VO_INTF_DP1                    (0x01L << 16)
 
 #define VO_INTF_NUM                     17
 
@@ -243,8 +241,13 @@ typedef struct rkVO_CHN_ATTR_S {
     RK_U32 u32Priority; /* Video out overlay pri sd */
     RECT_S stRect;      /* Rectangle of video output channel */
     RK_BOOL bDeflicker; /* Deflicker or not sd */
-    RK_U32 u32FgAlpha;  /* Alpha of A = 1 in pixel format ARGB1555 */
-    RK_U32 u32BgAlpha;  /* Alpha of A = 0 in pixel format ARGB1555 */
+    RK_U32 u32FgAlpha;  /* Alpha of A = 1 in pixel format BGRA5551/RGBA5551 */
+    RK_U32 u32BgAlpha;  /* Alpha of A = 0 in pixel format BGRA5551/RGBA5551 */
+    RK_BOOL bEnKeyColor;/* Enable key color or not when pixel format BGRA5551/RGBA5551 */
+    RK_U32 u32KeyColor; /* Key color value of pixel format BGRA5551/RGBA5551, B[0:4] G[5:9] R[10:14] */
+    RK_BOOL bMirror;    /* RW; Mirror enable. */
+    RK_BOOL bFlip;      /* RW; Flip enable. */
+    ROTATION_E enRotation; /* RW; rotation. */
 } VO_CHN_ATTR_S;
 
 typedef struct rkVO_CHN_PARAM_S {
@@ -289,10 +292,10 @@ typedef struct rkVO_SYNC_INFO_S {
 } VO_SYNC_INFO_S;
 
 typedef struct rkVO_PUB_ATTR_S {
-    RK_U32 u32BgColor; /* RW; Background color of a device, in RGB format. */
-    VO_INTF_TYPE_E enIntfType; /* RW; Type of a VO interface */
-    VO_INTF_SYNC_E enIntfSync; /* RW; Type of a VO interface timing */
-    VO_SYNC_INFO_S stSyncInfo; /* RW; Information about VO interface timings */
+    RK_U32 u32BgColor;          /* RW; Background color of a device, in RGB format. */
+    VO_INTF_TYPE_E enIntfType;  /* RW; Type of a VO interface */
+    VO_INTF_SYNC_E enIntfSync;  /* RW; Type of a VO interface timing */
+    VO_SYNC_INFO_S stSyncInfo;  /* RW; Information about VO interface timings */
 } VO_PUB_ATTR_S;
 
 typedef struct rkVO_WBC_ATTR_S {
@@ -342,6 +345,11 @@ typedef enum rkVO_PART_MODE_E {
     VO_PART_MODE_BUTT
 } VO_PART_MODE_E;
 
+typedef enum rkVO_SPLICE_MODE_E {
+    VO_SPLICE_MODE_GPU = 0,
+    VO_SPLICE_MODE_RGA
+} VO_SPLICE_MODE_E;
+
 typedef enum rkVO_LAYER_MODE_E {
     VO_LAYER_MODE_CURSOR = 0,
     VO_LAYER_MODE_GRAPHIC = 1,
@@ -355,7 +363,7 @@ typedef struct rkVO_VIDEO_LAYER_ATTR_S {
     RK_U32 u32DispFrmRt; /* RW; Display frame rate */
     PIXEL_FORMAT_E enPixFormat; /* RW; Pixel format of the video layer */
     RK_BOOL bDoubleFrame; /* RW; Whether to double frames */
-    RK_BOOL bClusterMode; /* RW; Whether to take Cluster way to use memory */
+    COMPRESS_MODE_E enCompressMode; /* RW; Video Layer output compress mode */
     DYNAMIC_RANGE_E enDstDynamicRange; /* RW; Video Layer output dynamic range type */
 } VO_VIDEO_LAYER_ATTR_S;
 

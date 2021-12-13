@@ -32,6 +32,7 @@ typedef enum _RTMBFlags {
     RT_MB_FLAG_EOS  = (1 << 1),
     RT_MB_FLAG_ERROR = (1 << 2),
     RT_MB_FLAG_DROP_IF_FULL = (1 << 3),
+    RT_MB_FLAG_EXT_MB = (1 << 4),
     // add more
     RT_MB_FLAG_BUTT  = 0xffffffff
 } RTMBFlags;

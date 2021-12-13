@@ -19,7 +19,6 @@
 #define INCLUDE_RT_MPI_RK_COMMON_VIDEO_H_
 
 #include "rk_type.h"
-// #include "rk_defines.h"
 #include "rk_common.h"
 #include "rk_comm_mb.h"
 

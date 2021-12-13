@@ -48,6 +48,7 @@ RK_S32 RK_MPI_AI_SaveFile(AUDIO_DEV AiDevId, AI_CHN AiChn,
                                 const AUDIO_SAVE_FILE_INFO_S *pstSaveFileInfo);
 RK_S32 RK_MPI_AI_QueryFileStatus(AUDIO_DEV AiDevId, AI_CHN AiChn,
                                         AUDIO_FILE_STATUS_S *pstFileStatus);
+RK_S32 RK_MPI_AI_GetFd(AUDIO_DEV AiDevId, AI_CHN AiChn);
 
 #ifdef __cplusplus
 #if __cplusplus

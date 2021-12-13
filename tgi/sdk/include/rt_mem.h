@@ -62,6 +62,10 @@ extern "C" {
 #define rt_safe_delete(p) { if (p) {delete(p); (p)=NULL;} }
 #endif
 
+#ifndef rt_safe_release
+#define rt_safe_release(p) { if (p) {p->release(); p=NULL;} }
+#endif
+
 void *rt_mem_malloc(size_t size, const char *caller);
 void *rt_mem_calloc(size_t size, const char *caller);
 void *rt_mem_realloc(void *ptr, size_t size, const char *caller);

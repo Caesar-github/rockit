@@ -30,6 +30,7 @@ class RTAVShellBuffer : public RTMediaBuffer {
     virtual void   setExtMediaBuffer(RTMediaBuffer *buffer);
     virtual RTMediaBuffer* getExtMediaBuffer();
     virtual void   release(bool debug = false);
+    virtual void   signalBufferAvailable();
     virtual void*  getData() const;
     virtual UINT32 getSize() const;
     virtual UINT32 getRealSize() const;

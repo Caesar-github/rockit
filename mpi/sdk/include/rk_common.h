@@ -19,10 +19,7 @@
 #define INCLUDE_RT_MPI_RK_COMMON_H_
 
 #include "rk_type.h"
-
 #include "rk_defines.h"
-
-
 
 #ifdef __cplusplus
 #if __cplusplus
@@ -30,9 +27,8 @@ extern "C" {
 #endif
 #endif /* End of #ifdef __cplusplus */
 
-
+#define ALIGN_NUM 16
 #define ATTRIBUTE __attribute__((aligned (ALIGN_NUM)))
-
 
 #define COMPAT_POINTER(ptr, type)\
     do {\
@@ -41,12 +37,10 @@ extern "C" {
         ptr = (type)(RK_UL)u32Addr;\
     } while (0)
 
-
 #define VERSION_NAME_MAXLEN 64
 typedef struct rkMPP_VERSION_S {
     RK_CHAR aVersion[VERSION_NAME_MAXLEN];
 } MPP_VERSION_S;
-
 
 typedef RK_S32 AI_CHN;
 typedef RK_S32 AO_CHN;
@@ -94,7 +88,6 @@ typedef RK_S32 MCF_CHN;
 #define RK_INVALID_VALUE (-1)
 #define RK_INVALID_TYPE (-1)
 
-
 #define CCM_MATRIX_SIZE             (9)
 #define CCM_MATRIX_NUM              (7)
 
@@ -122,6 +115,7 @@ typedef enum rkMOD_ID_E {
     RK_ID_TDE     = 14,
     RK_ID_ISP     = 15,
     RK_ID_WBC     = 16,
+    RK_ID_AVS     = 17,
 
     RK_ID_BUTT,
 } MOD_ID_E;
@@ -150,6 +144,7 @@ typedef struct rkMPP_CHN_S {
 #define RK_MOD_TDE       "tde"
 #define RK_MOD_ISP       "isp"
 #define RK_MOD_WBC       "wbc"
+#define RK_MOD_AVS       "avs"
 
 typedef enum rkCODEC_ID_E {
      RK_VIDEO_ID_Unused,             /**< Value when coding is N/A */
@@ -263,13 +258,6 @@ typedef enum rkCODEC_ID_E {
      RK_SUB_ID_HDMV_TEXT,
      RK_SUB_CodingMax
 } RK_CODEC_ID_E;
-
-
-typedef enum rkVPROC_DEV_TYPE_E {
-    VPROC_DEV_RGA                = 0,    /* RGA device */
-    VPROC_DEV_GLPSS              = 1,    /* GL process device */
-    VPROC_DEV_BUTT
-} VPROC_DEV_TYPE_E;
 
 #ifdef __cplusplus
 #if __cplusplus

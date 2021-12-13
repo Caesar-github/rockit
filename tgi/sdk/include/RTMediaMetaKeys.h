@@ -90,6 +90,7 @@ enum {
     kKeySCodecEncoding      = MKTAG('s', 'e', 'n', 'g'),  // INT32
     kKeyCharsetName         = MKTAG('s', 'c', 's', 'n'),  // char*
     kKeySSourceFrom         = MKTAG('s', 'f', 'r', 'm'),  // INT32
+    kKeySubVisible          = MKTAG('s', 'v', 'b', 'l'),  // INT32
 
     /* RTFrame */
     kKeyFrameType        = MKTAG('f', 't', 'y', 'e'),   // INT32

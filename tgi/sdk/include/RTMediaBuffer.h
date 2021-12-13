@@ -126,11 +126,11 @@ class RTMediaBuffer : public RTObject {
     // refs manage
     RT_RET              addRefs();
     INT32               refsCount();
+    // Clears meta data and resets the range to the full extent.
+    virtual void        reset();
 
  protected:
     void                decRefs();
-    // Clears meta data and resets the range to the full extent.
-    virtual void        reset();
 
  private:
     void                baseInit();
@@ -158,6 +158,7 @@ class RTMediaBuffer : public RTObject {
     RTAllocator    *mAllocator;
     RtMutex        *mLock;
     RtMutex         mListenerLock;
+    RtReference    *mBufObjRef;
 
     RtMediaBufferStatus     mStatus;
     RTMediaBufferSite       mSite;

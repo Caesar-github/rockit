@@ -55,7 +55,6 @@ RK_S32 RK_MPI_VO_CreateGraphicsFrameBuffer(RK_U32 Width, RK_U32 Height, RK_U32 F
 RK_S32 RK_MPI_VO_DestroyGraphicsFrameBuffer(RK_VOID* fd);
 RK_VOID * RK_MPI_VO_GetGraphicsFrameBuffer(RK_VOID *fd);
 RK_S32 RK_MPI_VO_GetFrameInfo(RK_VOID *pMblk, VO_FRAME_INFO_S *pstFrame);
-RK_VOID * RK_MPI_VO_CloneBuffer(RK_VOID *fd);
 
 /* Pre-created framebuffer mode*/
 RK_S32 RK_MPI_VO_SetGFxMode(VO_GFX_MODE_E u32Mode);
@@ -77,9 +76,6 @@ RK_S32 RK_MPI_VO_DisableLayer(VO_LAYER VoLayer);
 
 RK_S32 RK_MPI_VO_SetLayerPriority(VO_LAYER VoLayer, RK_U32 u32Priority);
 RK_S32 RK_MPI_VO_GetLayerPriority(VO_LAYER VoLayer, RK_U32 *pu32Priority);
-
-RK_S32 RK_MPI_VO_SetLayerPartitionMode(VO_LAYER VoLayer, VO_PART_MODE_E enPartMode);
-RK_S32 RK_MPI_VO_GetLayerPartitionMode(VO_LAYER VoLayer, VO_PART_MODE_E *penPartMode);
 
 RK_S32 RK_MPI_VO_SetLayerCSC(VO_LAYER VoLayer, const VO_CSC_S *pstVideoCSC);
 RK_S32 RK_MPI_VO_GetLayerCSC(VO_LAYER VoLayer, VO_CSC_S *pstVideoCSC);
@@ -149,6 +145,13 @@ RK_S32 RK_MPI_VO_GetWbcDepth(VO_WBC VoWbc, RK_S32 *pu32Depth);
 
 RK_S32 RK_MPI_VO_GetWbcFrame(VO_WBC VoWbc, VIDEO_FRAME_INFO_S *pstVFrame, RK_S32 s32MilliSec);
 RK_S32 RK_MPI_VO_ReleaseWbcFrame(VO_WBC VoWbc, VIDEO_FRAME_INFO_S *pstVFrame);
+
+/* splice type setting */
+RK_S32 RK_MPI_VO_SetLayerSpliceMode(VO_LAYER VoLayer, VO_SPLICE_MODE_E enSpliceMode);
+RK_S32 RK_MPI_VO_GetLayerSpliceMode(VO_LAYER VoLayer, VO_SPLICE_MODE_E *enSpliceMode);
+
+RK_S32 RK_MPI_VO_SetChnRotation(VO_LAYER VoLayer, VO_CHN VoChn, ROTATION_E enRotation);
+RK_S32 RK_MPI_VO_GetChnRotation(VO_LAYER VoLayer, VO_CHN VoChn, ROTATION_E *penRotation);
 
 #ifdef __cplusplus
 #if __cplusplus

@@ -33,9 +33,10 @@ extern "C" {
 #define VI_CHN2                       2
 #define VI_CHN3                       3
 
-#define MAX_VI_FILE_PATH_LEN 256
-#define MAX_VI_FILE_NAME_LEN 256
+#define MAX_VI_FILE_PATH_LEN   256
+#define MAX_VI_FILE_NAME_LEN   256
 #define MAX_VI_ENTITY_NAME_LEN 32
+#define MAX_VI_BIND_PIPE_NUM   16
 
 /* interface mode of video input */
 typedef enum rkVI_INTF_MODE_E {
@@ -128,7 +129,7 @@ typedef struct rkVI_DEV_ATTR_S {
 /* Information of pipe binded to device */
 typedef struct rkVI_DEV_BIND_PIPE_S {
     RK_U32  u32Num;                                     /* RW;Range [1,VI_MAX_PHY_PIPE_NUM] */
-    VI_PIPE PipeId[VI_MAX_PHY_PIPE_NUM];                /* RW;Array of pipe ID */
+    VI_PIPE PipeId[MAX_VI_BIND_PIPE_NUM];               /* RW;Array of pipe ID */
 } VI_DEV_BIND_PIPE_S;
 
 /* The attributes of pipe */
@@ -234,7 +235,7 @@ typedef struct rkVI_FRAME_S {
 #define RK_ERR_VI_INVALID_CHNID       RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_INVALID_CHNID)
 #define RK_ERR_VI_INVALID_NULL_PTR    RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_NULL_PTR)
 #define RK_ERR_VI_FAILED_NOTCONFIG    RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_NOT_CONFIG)
-#define RK_ERR_VI_SYS_NOTREADY        RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_VI_SYS_NOTREADY        RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 #define RK_ERR_VI_BUF_EMPTY           RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_EMPTY)
 #define RK_ERR_VI_BUF_FULL            RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
 #define RK_ERR_VI_NOMEM               RK_DEF_ERR(RK_ID_VI, RK_ERR_LEVEL_ERROR, RK_ERR_NOMEM)

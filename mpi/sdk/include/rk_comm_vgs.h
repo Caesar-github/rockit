@@ -36,15 +36,11 @@ extern "C" {
 #define RK_ERR_VGS_NULL_PTR        RK_DEF_ERR(RK_ID_VGS, RK_ERR_LEVEL_ERROR, RK_ERR_NULL_PTR)
 #define RK_ERR_VGS_ILLEGAL_PARAM   RK_DEF_ERR(RK_ID_VGS, RK_ERR_LEVEL_ERROR, RK_ERR_ILLEGAL_PARAM)
 #define RK_ERR_VGS_BUF_FULL        RK_DEF_ERR(RK_ID_VGS, RK_ERR_LEVEL_ERROR, RK_ERR_BUF_FULL)
-#define RK_ERR_VGS_SYS_NOTREADY    RK_DEF_ERR(RK_ID_VGS, RK_ERR_LEVEL_ERROR, RK_ERR_SYS_NOTREADY)
+#define RK_ERR_VGS_SYS_NOTREADY    RK_DEF_ERR(RK_ID_VGS, RK_ERR_LEVEL_ERROR, RK_ERR_NOTREADY)
 #define RK_ERR_VGS_NOT_SUPPORT     RK_DEF_ERR(RK_ID_VGS, RK_ERR_LEVEL_ERROR, RK_ERR_NOT_SUPPORT)
 #define RK_ERR_VGS_NOT_PERMITTED   RK_DEF_ERR(RK_ID_VGS, RK_ERR_LEVEL_ERROR, RK_ERR_NOT_PERM)
 
-#define VGS_PRIVATE_DATA_LEN                    6
-#define VGS_MAX_JOB_NUM                         100
-#define VGS_MAX_TASK_NUM                        200
-#define VGS_MAX_ARRAY_SIZE                      100
-#define VGS_INVALID_HANDLE                      -1
+#define VGS_MAX_ARRAY_SIZE               100
 
 typedef RK_S32 VGS_HANDLE;
 
@@ -105,7 +101,6 @@ typedef struct rkVGS_ADD_OSD_S {
     RK_U32                    u32BgAlpha;           /* RW; Range: [0,255]; Background alpha of osd */
 } VGS_ADD_OSD_S;
 
-
 typedef enum rkVGS_SCLCOEF_MODE_E {
     VGS_SCLCOEF_NORMAL   = 0,    /* normal scale coefficient*/
     VGS_SCLCOEF_TAP2     = 1,    /* scale coefficient of 2 tap */
@@ -114,7 +109,6 @@ typedef enum rkVGS_SCLCOEF_MODE_E {
     VGS_SCLCOEF_TAP8     = 4,    /* scale coefficient of 8 tap */
     VGS_SCLCOEF_BUTT
 } VGS_SCLCOEF_MODE_E;
-
 
 typedef enum rkVGS_MOSAIC_BLK_SIZE_E {
     RK_MOSAIC_BLK_SIZE_8  = 8, /* block size 8*8 of MOSAIC */
