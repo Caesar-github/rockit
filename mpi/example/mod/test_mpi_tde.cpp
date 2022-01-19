@@ -27,8 +27,8 @@
 #include "rk_mpi_tde.h"
 #include "rk_mpi_sys.h"
 #include "rk_mpi_cal.h"
-#include "test_comm_argparse.h"
-#include "test_comm_utils.h"
+#include "argparse.h"
+#include "mpi_test_utils.h"
 
 typedef enum rkTDE_OP_TYPE_E {
     TDE_OP_QUICK_COPY = 0,
@@ -117,7 +117,6 @@ RK_S32 test_tde_save_result(MB_BLK dstBlk, TDE_SURFACE_S  *pstDst, RK_S32 taskId
 
     if (pstFrame) {
         RK_LOGI("get frame data = %p, size = %d, bBlk:%p ", pstFrame, u32OutputSize, dstBlk);
-        RK_MPI_SYS_MmzFlushCache(dstBlk, RK_TRUE);
         fwrite(pstFrame, 1, u32OutputSize, file);
         fflush(file);
     }
@@ -503,7 +502,6 @@ RK_S32 test_tde_all_job(TEST_TDE_CTX_S *ctx) {
     } else {
         fclose(file);
     }
-    RK_MPI_SYS_MmzFlushCache(srcBlk, RK_FALSE);
     RK_U32 u32HorStride = RK_MPI_CAL_COMM_GetHorStride(ctx->u32SrcVirWidth,
                                                     ctx->stSrcSurface.enColorFmt);
     RK_U32 u32VerStride = ctx->u32SrcVirHeight;
@@ -523,7 +521,7 @@ RK_S32 test_tde_all_job(TEST_TDE_CTX_S *ctx) {
         }
     }
     for (RK_S32 i = 0; i < ctx->s32JobNum; i++) {
-        RK_U64 start = TEST_COMM_GetNowUs();
+        RK_U64 start = mpi_test_utils_get_now_us();
         s32Ret = RK_TDE_EndJob(hHandle[i], RK_FALSE, RK_TRUE, 10);
         if (s32Ret != RK_SUCCESS) {
             RK_TDE_CancelJob(hHandle[i]);
@@ -531,7 +529,7 @@ RK_S32 test_tde_all_job(TEST_TDE_CTX_S *ctx) {
         }
 
         RK_TDE_WaitForDone(hHandle[i]);
-        RK_U64 end = TEST_COMM_GetNowUs();
+        RK_U64 end = mpi_test_utils_get_now_us();
         if (ctx->bStatEn) {
             RK_LOGI("space time %lld us", end - start);
         }
